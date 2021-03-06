@@ -1,5 +1,5 @@
 {
-    "name": "tuupola/base58",
+    "name": "butterfly-team/avalanche-cb58",
     "description": "Base58 encoder and decoder for arbitrary data",
     "keywords": [
         "base58"
