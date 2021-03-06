@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 /*
 
-Copyright (c) 2017-2021 Mika Tuupola
+Copyright (c) 2017-2019 Mika Tuupola
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,6 @@ abstract class BaseEncoder
         $this->options = array_merge($this->options, (array) $options);
 
         $uniques = count_chars($this->options["characters"], 3);
-        /** @phpstan-ignore-next-line */
         if (58 !== strlen($uniques) || 58 !== strlen($this->options["characters"])) {
             throw new InvalidArgumentException("Character set must contain 58 unique characters");
         }
@@ -62,8 +61,8 @@ abstract class BaseEncoder
         if (true === $this->options["check"]) {
             $data = chr($this->options["version"]) . $data;
             $hash = hash("sha256", $data, true);
-            $hash = hash("sha256", $hash, true);
-            $checksum = substr($hash, 0, 4);
+//            $hash = hash("sha256", $hash, true);
+            $checksum = substr($hash, -4);
             $data .= $checksum;
         }
 
@@ -121,10 +120,11 @@ abstract class BaseEncoder
         if (true === $this->options["check"]) {
             $hash = substr($decoded, 0, -(Base58::CHECKSUM_SIZE));
             $hash = hash("sha256", $hash, true);
-            $hash = hash("sha256", $hash, true);
-            $checksum = substr($hash, 0, Base58::CHECKSUM_SIZE);
+//            $hash = hash("sha256", $hash, true);
+            $checksum = substr($hash, -(Base58::CHECKSUM_SIZE));
+            $checksum_decoded = substr($decoded, -(Base58::CHECKSUM_SIZE));
 
-            if (0 !== substr_compare($decoded, $checksum, -(Base58::CHECKSUM_SIZE))) {
+            if ($checksum != $checksum_decoded) {
                 $message = sprintf(
                     'Checksum "%s" does not match the expected "%s"',
                     bin2hex(substr($decoded, -(Base58::CHECKSUM_SIZE))),
@@ -188,7 +188,6 @@ abstract class BaseEncoder
             $invalid = str_replace($valid, "", $data);
             $invalid = count_chars($invalid, 3);
             throw new InvalidArgumentException(
-                /** @phpstan-ignore-next-line */
                 "Data contains invalid characters \"{$invalid}\""
             );
         }

@@ -17,7 +17,7 @@ $ composer require tuupola/base58
 This branch requires PHP 7.1 or up. The older 1.x branch supports also PHP 5.6 and 7.0.
 
 ``` bash
-$ composer require "tuupola/base58:^1.0"
+$ composer require "butterfly-team/avalanche-cb58:^1.0"
 ```
 
 ## Usage

@@ -64,7 +64,7 @@ class GmpEncoder
         if (true === $this->options["check"]) {
             $data = chr($this->options["version"]) . $data;
             $hash = hash("sha256", $data, true);
-            $hash = hash("sha256", $hash, true);
+            // $hash = hash("sha256", $hash, true);
             $checksum = substr($hash, 0, Base58::CHECKSUM_SIZE);
             $data .= $checksum;
         }
@@ -121,8 +121,8 @@ class GmpEncoder
         if (true === $this->options["check"]) {
             $hash = substr($decoded, 0, -(Base58::CHECKSUM_SIZE));
             $hash = hash("sha256", $hash, true);
-            $hash = hash("sha256", $hash, true);
-            $checksum = substr($hash, 0, Base58::CHECKSUM_SIZE);
+            // $hash = hash("sha256", $hash, true);
+            $checksum = substr($hash, -(Base58::CHECKSUM_SIZE));
 
             if (0 !== substr_compare($decoded, $checksum, -(Base58::CHECKSUM_SIZE))) {
                 $message = sprintf(
